@@ -1,0 +1,44 @@
+# Librerías para ESP8266
+
+Este proyecto utiliza varias librerías esenciales para trabajar con el ESP8266 en el entorno de Arduino. A continuación, se listan las librerías necesarias y los enlaces para agregarlas al IDE de Arduino.
+
+## Librerías Requeridas
+
+1. **Adafruit ESP8266**
+   - Descripción: Librería para trabajar con el ESP8266 desde Adafruit.
+   - Enlace: [Adafruit ESP8266](https://github.com/adafruit/Adafruit_ESP8266)
+
+2. **ESP8266WiFi**
+   - Descripción: Librería incluida por defecto con el soporte de ESP8266 en el IDE de Arduino.
+   - Nota: Se instala automáticamente al agregar el paquete ESP8266 en el IDE de Arduino.
+
+3. **ArduinoJson**
+   - Descripción: Librería para la manipulación de JSON, útil para trabajar con APIs.
+   - Enlace: [ArduinoJson](https://github.com/bblanchon/ArduinoJson)
+
+4. **WiFiManager**
+   - Descripción: Librería que permite configurar la conexión WiFi desde un navegador web, facilitando la configuración inicial de la red WiFi.
+   - Enlace: [WiFiManager](https://github.com/tzapu/WiFiManager)
+
+5. **ESPAsyncWebServer**
+   - Descripción: Librería para crear servidores web asincrónicos más eficientes en el ESP8266.
+   - Enlace: [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
+   - Nota: Requiere la librería adicional `ESPAsyncTCP`:
+     - Enlace: [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
+
+6. **PubSubClient**
+   - Descripción: Librería para trabajar con el protocolo MQTT.
+   - Enlace: [PubSubClient](https://github.com/knolleary/pubsubclient)
+
+7. **TimeLib**
+   - Descripción: Librería para gestionar fechas y horas, muy útil en proyectos que requieren la sincronización temporal.
+   - Enlace: [TimeLib](https://github.com/PaulStoffregen/Time)
+
+8. **NTPClient**
+   - Descripción: Librería para sincronizar la hora utilizando un servidor NTP.
+   - Enlace: [NTPClient](https://github.com/arduino-libraries/NTPClient)
+
+9. **Adafruit Sensor y DHT**
+   - Descripción: Librerías para trabajar con sensores como el DHT11/DHT22.
+   - Enlace: [Adafruit Sensor](https://github.com/adafruit/Adafruit_Sensor)
+   - Enlace: [DHT Sensor Library](https://github.com/adafruit/DHT-sensor-library)
