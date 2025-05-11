@@ -1,0 +1,162 @@
+#include <ESP8266WiFi.h>
+#include <ArduinoOTA.h>
+
+const char* ssid = "Nombre Red"; // SSID inicial
+const char* password = "Password Red"; // Contraseña inicial
+
+bool wifiConnected = false;
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println("🚀 Iniciando Menu OTA Full 1.3 PRO Edition");
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  Serial.print("🔌 Conectando a WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  wifiConnected = true;
+
+  Serial.println();
+  Serial.println("✅ WiFi Conectado!");
+  Serial.print("📡 IP: ");
+  Serial.println(WiFi.localIP());
+
+  setupOTA();
+  
+  mostrarMenu();
+}
+
+void loop() {
+  ArduinoOTA.handle();
+
+  if (Serial.available()) {
+    char opcion = Serial.read();
+    ejecutarOpcion(opcion);
+    mostrarMenu();
+  }
+}
+
+void setupOTA() {
+  ArduinoOTA.setHostname("Menu_OTA_ESP8266");
+  ArduinoOTA.setPassword("1");
+
+  ArduinoOTA.onStart([]() {
+    Serial.println("🚀 OTA Inicio: Subiendo nuevo Sketch...");
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("✅ OTA Finalizado: ¡Éxito!");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("📦 OTA Progreso: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("❌ OTA Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) Serial.println("Error de autenticación");
+    else if (error == OTA_BEGIN_ERROR) Serial.println("Error al comenzar");
+    else if (error == OTA_CONNECT_ERROR) Serial.println("Error de conexión");
+    else if (error == OTA_RECEIVE_ERROR) Serial.println("Error de recepción");
+    else if (error == OTA_END_ERROR) Serial.println("Error al finalizar");
+  });
+
+  ArduinoOTA.begin();
+  Serial.println("✅ OTA listo para recibir actualizaciones (Password: '1').");
+}
+
+void mostrarMenu() {
+  Serial.println("\n======== MENÚ PRINCIPAL ========");
+  Serial.println("1. 📡 Escanear redes WiFi");
+  Serial.println("2. 🔧 Cambiar WiFi");
+  Serial.println("3. 🔵 Buscar dispositivos Bluetooth");
+  Serial.println("================================");
+  Serial.println("⌨️ Ingresa opción (1, 2 o 3):");
+}
+
+void ejecutarOpcion(char opcion) {
+  switch (opcion) {
+    case '1':
+      escanearWiFi();
+      break;
+    case '2':
+      cambiarWiFi();
+      break;
+    case '3':
+      buscarBluetooth();
+      break;
+    default:
+      Serial.println("⚠️ Opción no válida. Intenta de nuevo.");
+      break;
+  }
+}
+
+struct RedWiFi {
+  String ssid;
+  int32_t rssi;
+  uint8_t encryptionType;
+};
+
+void escanearWiFi() {
+  Serial.println("🔍 Escaneando redes WiFi...");
+
+  int n = WiFi.scanNetworks();
+  if (n == 0) {
+    Serial.println("❌ No se encontraron redes.");
+  } else {
+    RedWiFi redes[n];
+    for (int i = 0; i < n; ++i) {
+      redes[i].ssid = WiFi.SSID(i);
+      redes[i].rssi = WiFi.RSSI(i);
+      redes[i].encryptionType = WiFi.encryptionType(i);
+    }
+
+    // Ordenar de mejor señal a peor (tipo burbuja sencillo)
+    for (int i = 0; i < n - 1; ++i) {
+      for (int j = i + 1; j < n; ++j) {
+        if (redes[j].rssi > redes[i].rssi) {
+          RedWiFi temp = redes[i];
+          redes[i] = redes[j];
+          redes[j] = temp;
+        }
+      }
+    }
+
+    Serial.printf("📶 %d redes encontradas:\n\n", n);
+    for (int i = 0; i < n; ++i) {
+      String tipoSeguridad;
+      switch (redes[i].encryptionType) {
+        case ENC_TYPE_NONE:
+          tipoSeguridad = "Abierta";
+          break;
+        case ENC_TYPE_WEP:
+          tipoSeguridad = "WEP";
+          break;
+        case ENC_TYPE_TKIP:
+          tipoSeguridad = "WPA";
+          break;
+        case ENC_TYPE_CCMP:
+          tipoSeguridad = "WPA2";
+          break;
+        case ENC_TYPE_AUTO:
+          tipoSeguridad = "Auto";
+          break;
+        default:
+          tipoSeguridad = "Desconocido";
+          break;
+      }
+
+      Serial.printf("%d. 📶 %s (%s) - Señal: %d dBm\n", i + 1, redes[i].ssid.c_str(), tipoSeguridad.c_str(), redes[i].rssi);
+    }
+  }
+}
+
+void cambiarWiFi() {
+  Serial.println("⚙️ Función para cambiar WiFi (Placeholder - ¡en futura versión será interactiva!).");
+}
+
+void buscarBluetooth() {
+  Serial.println("🔵 Buscando dispositivos Bluetooth... (Placeholder - el ESP8266 no tiene Bluetooth integrado).");
+}
