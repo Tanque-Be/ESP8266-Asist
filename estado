@@ -1,0 +1,38 @@
+#include <ESP8266WiFi.h>
+#include <ArduinoOTA.h>
+
+const char* ssid = "Wifi Name";
+const char* password = "Wifi Password";
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println("\n\nIniciando NodeMCU OTA...");
+
+  WiFi.mode(WIFI_STA); // Nos aseguramos de que solo se conecte como cliente
+  WiFi.begin(ssid, password);
+
+  Serial.println("Conectando a WiFi...");
+  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("❌ ¡Error de conexión! Reiniciando en 5 segundos...");
+    delay(5000);
+    ESP.restart();
+  }
+
+  // 🎯 Banner bonito mostrando la IP
+  Serial.println("✅ ¡Conexión WiFi exitosa!");
+  Serial.println("🚀 IP asignada:");
+  Serial.println("------------------------------");
+  Serial.print("🌐 http://");
+  Serial.println(WiFi.localIP());
+  Serial.println("------------------------------");
+
+  // Inicializamos OTA
+  ArduinoOTA.setHostname("Test-ESP32"); // Nombre que se verá en el IDE (opcional)
+  ArduinoOTA.begin();
+
+  Serial.println("🛰️ OTA listo para recibir actualizaciones.");
+}
+
+void loop() {
+  ArduinoOTA.handle(); // ¡Nunca olvidarlo!
+}
