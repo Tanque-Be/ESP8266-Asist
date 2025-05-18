@@ -5,9 +5,9 @@
 #include <ArduinoJson.h>
 
 // WiFi y Telegram
-const char* ssid = "Chukies' House";
-const char* password = "laspeluconas";
-const String botToken = "7031568892:AAGefuyKv7VeHuZjIA_LeSggZ3McO0xtL6Y";
+const char* ssid = "Wifi Name";
+const char* password = "Wifi Pass";
+const String botToken = "Bot Token";
 const String chatId = "6012153212";
 
 WiFiClientSecure client;
